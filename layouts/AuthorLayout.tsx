@@ -27,15 +27,18 @@ export default function AuthorLayout({ frontMatter }: Props) {
             />
           </div>
           <div className="prose max-w-none pb-8 pt-8 dark:prose-dark xl:col-span-2">
-            Hey, I'm Ben. 👋
+            Hey, I'm David. 👋
             <br />
             <br />
-            I have a Masters in Physics from Oxford University. I have experience across the full
-            stack and entire software development lifecycle. I've delivered high-quality, scalable
-            products to production and hope to continue doing so!
+            I’m a software engineer and long-time skateboarder. Before software, I had a past life
+            in Fine Art.
             <br />
-            <br /> I'm a qualified AWS Developer Associate and Cloud Practitioner. I'm also a
-            qualified Circl Leader as a Coach.
+            <br /> I currently work as a Senior Front End Engineer at
+            <a href="https://flex.one/" target="_blank" rel="noopener noreferrer">
+              {' '}
+              Flex
+            </a>
+            .
           </div>
         </div>
       </div>

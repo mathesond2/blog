@@ -1,14 +1,14 @@
 ---
-name: Ben Piggin
+name: David Matheson
 avatar: /static/images/avatar.png
-occupation: Architect Developer
-company: Theodo UK
-email: address@yoursite.com
+occupation: Senior Front End Engineer
+company: Flex
+email: mathesond2@gmail.com
 twitter: https://twitter.com/Twitter
-linkedin: https://www.linkedin.com
-github: https://github.com/bpiggin
+linkedin: https://www.linkedin.com/in/david-matheson
+github: https://github.com/mathesond2
 ---
 
-After graduating from the University of Oxford with a Masters in Physics, Ben joined TPP in September 2018. After a year gaining a strong grounding in object-oriented design in Java, as well as native app development experience on both the Android and iOS platforms he moved to London and joined Theodo UK in January 2020.
+I’m a software engineer and long-time skateboarder. Before software, I had a past life in Fine Art.
 
-His current role combines technical expertise across a number of programming languages and frameworks with an ability to understand and tackle problems from a business perspective.
+Since leaving my role as an engineering manager last year, I’ve become a core contributor for a generative art group, worked on a few different product ideas, and have most recently built governance tooling for a decentralized financial exchange.

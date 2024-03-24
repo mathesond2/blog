@@ -1,23 +1,23 @@
 const siteMetadata = {
-  title: 'Ben Piggin',
-  author: 'Ben Piggin',
-  headerTitle: 'Ben Piggin',
+  title: 'David Matheson',
+  author: 'David Matheson',
+  headerTitle: 'David Matheson',
   description:
-    'Ben Piggin is a software engineer who lives in London. Sometimes he writes blog articles. You can find them here.',
+    'David Matheson is a software engineer who lives in NYC. Sometimes he writes blog articles. You can find them here.',
   language: 'en-gb',
   theme: 'light', // system, dark or light
-  siteUrl: 'https://bpiggin.com',
+  siteUrl: 'https://dmath.is',
   siteRepo: 'https://github.com/bpiggin/bpiggin-blog',
   siteLogo: '/static/images/logo.png',
   image: '/static/images/avatar.png',
   socialBanner: '/static/images/twitter-card.png',
-  email: 'benp@theodo.co.uk',
-  github: 'https://github.com/bpiggin',
+  email: 'mathesond2@gmail.com',
+  github: 'https://github.com/mathesond2',
   twitter: '',
   facebook: '',
   youtube: '',
-  linkedin: 'https://www.linkedin.com/in/benjamin-piggin',
-  locale: 'en-GB',
+  linkedin: 'https://www.linkedin.com/in/david-matheson/',
+  locale: 'en-US',
   analytics: {
     // If you want to use an analytics provider you have to add it to the
     // content security policy in the `next.config.js` file.
@@ -25,7 +25,7 @@ const siteMetadata = {
     plausibleDataDomain: '', // e.g. tailwind-nextjs-starter-blog.vercel.app
     simpleAnalytics: false, // true or false
     umamiWebsiteId: '', // e.g. 123e4567-e89b-12d3-a456-426614174000
-    googleAnalyticsId: 'G-90SCP9Y9DE', // e.g. UA-000000-2 or G-XXXXXXX
+    googleAnalyticsId: 'UA-000000-2', // e.g. UA-000000-2 or G-XXXXXXX
   },
   newsletter: {
     // supports mailchimp, buttondown, convertkit, klaviyo
