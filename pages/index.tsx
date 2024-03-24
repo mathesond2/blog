@@ -24,7 +24,7 @@ export default function Home({ posts }: InferGetStaticPropsType<typeof getStatic
       <div className="divide-y divide-gray-200 dark:divide-gray-700">
         <div className="space-y-2 pb-6 pt-3 md:space-y-4">
           <p className="leading-7 text-gray-600 dark:text-gray-300">
-            Ben Piggin is a software engineer who lives in London. Sometimes he writes blog
+            David Matheson is a software engineer who lives in NYC. Sometimes he writes blog
             articles. You can find them here.
           </p>
         </div>

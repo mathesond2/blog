@@ -13,8 +13,6 @@ export default function Footer() {
           <div>{siteMetadata.author}</div>
           <div>{` • `}</div>
           <div>{`© ${new Date().getFullYear()}`}</div>
-          <div>{` • `}</div>
-          <a href="https://icons8.com">Icons</a>
         </div>
       </div>
     </footer>
