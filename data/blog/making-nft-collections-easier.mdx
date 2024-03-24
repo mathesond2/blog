@@ -1,0 +1,82 @@
+---
+title: 'HashesDAO: Permutation Five'
+date: 2022-09-20T15:32:14Z
+lastmod: '2022-09-20'
+tags: ['next-js', 'tailwind', 'guide']
+draft: false
+summary: 'A simple UI to create/deploy NFT collections on existing smart contract infrastructure'
+layout: PostSimple
+canonicalUrl: making-nft-collections-easier
+---
+
+<center>
+  [![Watch the
+  video](https://cdn.loom.com/sessions/thumbnails/dc459899f6894ff59887ed79ab28dc32-with-play.gif)](https://www.loom.com/share/dc459899f6894ff59887ed79ab28dc32)
+</center>
+
+We’ve recently finished a major milestone for Permutation Five: a v1 dynamic user experience that allows anyone to easily create a new NFT collection on our [existing smart contract infrastructure](https://medium.com/dex-labs/hashes-collections-technical-deep-dive-637e616c1e1a).
+
+As a long-time UI engineer that was completely new to crypto, this was a solid opportunity to dive into learning about the Ethereum ecosystem, specifically around how smart contracts work, and the interaction between user → UI → smart contract. Through working on Permutation Five, I learned about Typechain, ABIs, Solidity basics, Solidity testing, and a wealth of info around smart contracts in general (ex: how factory contracts create other contracts, and how interoperability exists via various standards and interfaces).
+
+## New Workflow
+
+Artists can now easily use an interface to create the settings for their collection’s mint details, kicking off the new “create flow” via a button on our [“collections” page](https://thehashes.xyz/collections):
+
+!['create + deploy flow' screenshot one](/static/images/perm-5/one.png)
+
+Afterward, artists are able to set numerous settings about their new collection:
+
+!['create + deploy flow' screenshot two](/static/images/perm-5/two.png)
+
+For setting eligibility criteria, artists can choose to set a flat fee in ETH, use their own mint contract, or choose a more complex “multi-stage” allow list, which lets artists specify individual minting stages with their own granular criteria (i.e “how many mints are available and who is specifically eligible?”) based off either ETH wallet address and/or hash token ID:
+
+!['create + deploy flow' screenshot three](/static/images/perm-5/three.png)
+!['create + deploy flow' screenshot four](/static/images/perm-5/four.png)
+
+Finally, artists are able to specify their own royalty percentages, the baseTokenUri to be used to serve the NFT asset, and an optional signature block address to establish provenance over the collection.
+
+!['create + deploy flow' screenshot five](/static/images/perm-5/five.png)
+
+After completing the UI flow for creating a new hashes NFT collection, an artist can review all collection settings and then deploy the associated contracts to the Ethereum network with a single click:
+
+!['create + deploy flow' screenshot six](/static/images/perm-5/six.png)
+
+Upon deployment success, artists will see a success message with links to their mint page (and allow list page, if applicable).
+
+!['create + deploy flow' screenshot seven](/static/images/perm-5/seven.png)
+
+After a collection is deployed, eligible users can go to the new collection’s mint page (all collections are discoverable at [https://thehashes.xyz/collections](https://thehashes.xyz/collections)) and mint using their associated hash token IDs and/or ETH Wallet addresses.
+
+!['create + deploy flow' screenshot eight](/static/images/perm-5/eight.png)
+
+For a multi-stage allow list, users have an allow list page that they may view to see the collection’s stages and its current status, which is discoverable via a link on the collection’s individual mint page.
+
+For owners of a multi-stage allow list contract, they can connect their associated wallet and use the allow list page to set a series of settings:
+
+- start the minting process
+- advance their collection to the next stage (if already started)
+- pause/resume the minting process
+- edit eligible ETH wallet addresses for each stage
+- edit eligible hash token IDs for each stage
+- permanently end the minting process
+
+!['create + deploy flow' screenshot nine](/static/images/perm-5/nine.png)
+
+## Technical Details
+
+Working on the frontend was pretty straight-forward using the existing toolchain (NextJS, React and Typescript, Typechain, Chakra-UI, and various scripts for building/generating contract types/deploying). We also created four associated smart contracts (+ their associated unit tests and deploy script) to go along with this new UI flow:
+
+- [AllHashesEligibilityPredicate](https://etherscan.io/address/0xaa3c1989fcd7f18b5eb78475bf2538fb05c846c3) - used when creating a Hashes NFT collection (CollectionNFTCloneableV1) where all hash holders are eligible to mint.
+- [DAOHashesEligibilityPredicate](https://etherscan.io/address/0x5d480d666dbbb2eb24392574cfde913497300d8e) - used when creating a Hashes NFT collection where all DAO hash holders (token IDs 0-999) are eligible to mint.
+- [StaticMintFeePredicateCloneable](https://etherscan.io/address/0x2a7479f450cbc6c3482b1abbe3c4c73e7ef21722) - a cloneable contract ​​used to provide mint fee logic upon creating a new Hashes NFT collection. This is used in the dynamic UI in the case that a user has specified a flat mint fee rather than their own mint fee contract.
+- [MultiStageAllowlistCloneable](https://etherscan.io/address/0xE53c5FcE669d16F61204C1ae0DBD699085d07CC9) - a cloneable contract used to provide individual mint stages that include their own mint fee logic and various eligibility details
+
+The predicate contracts work in concert with the existing Hashes’ cloneable NFT collection contract ([CollectionNFTCloneableV1](https://etherscan.io/address/0xe023e03dca09e3e467251d29057cfd2ccdd797a9#code)) during the deployment flow: being deployed first, their resulting predicate contracts’ addresses are used as parameters that are then ABI encoded and deployed with a new instance of CollectionNFTCloneableV1 (aka the new NFT collection).
+
+In the case of using a multi-stage allow list, mint fee and eligibility details will be added for each stage within a cloned instance of the MultiStageAllowlistCloneable contract, which is then deployed and its resulting contract address is then used as an ABI-encoded parameter to be deployed with the new instance of CollectionNFTCloneableV1. After a multi-stage collection is deployed, we then associate the multi-stage contract with the new collection by calling the multi-stage contract’s `setNFTAddress()` function with the deployed CollectionNFTCloneableV1 address as a parameter.
+
+## Next Steps
+
+We’re in the process of finding artists to pilot our new user experience via creating new collections on the Hashes ecosystem, and are looking toward implementing our existing [payment splitter contract](https://etherscan.io/address/0x719d437a3525012d6fdafc9db3159cec57adba37#code) within this ‘create flow’ to allow artists to specify multiple creators to be paid out automatically upon minting.
+
+P.S. We want to give a big THANK YOU to our friends over at [PopBlocks](https://www.popblocks.org/) for their work in creating the multi-stage allow list contract for this project!

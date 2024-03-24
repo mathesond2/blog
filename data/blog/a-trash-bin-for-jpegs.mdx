@@ -1,0 +1,64 @@
+---
+title: 'A Trash Bin, for JPEGs'
+date: 2023-02-06T15:32:14Z
+lastmod: '2023-02-06'
+tags: ['next-js', 'tailwind', 'guide']
+draft: false
+summary: 'Sell your illiquid NFTs to our smart contract in exchange for a tiny amount of ETH. And of course, a marketplace for trashed jpegs.'
+layout: PostSimple
+canonicalUrl: a-trash-bin-for-jpegs
+---
+
+<center>
+  [![Watch the
+  video](https://cdn.loom.com/sessions/thumbnails/f810ea0d98b94fabbc32e6c2a35b4547-1675704861146-with-play.gif)](https://www.loom.com/share/f810ea0d98b94fabbc32e6c2a35b4547)
+</center>
+At HashesDAO, we've just built a tool that allows anyone to sell their illiquid NFTs on Ethereum to a
+smart contract in exchange for a tiny amount of ETH. So if you bought a NFT and it went straight to zero,
+you can at least sell it to someone.
+
+[The JPEG Trash Bin](https://www.jpegtrashbin.xyz/), your buyer of last resort, is a potential permission-less tax loss harvesting tool for NFTs (Not Financial Advice™️). Likewise, The Trash Bin also provides users with a marketplace where collectors can “dumpster dive” for NFT gems that others have previously trashed.
+
+Discounts on these re-purchases are available for [standard](https://opensea.io/collection/hashes?search%5BsortAscending%5D=true&search%5BsortBy%5D=UNIT_PRICE&search%5BstringTraits%5D%5B0%5D%5Bname%5D=Type&search%5BstringTraits%5D%5B0%5D%5Bvalues%5D%5B0%5D=Standard&ref=dmath.is) (25% discount) and [DAO](https://opensea.io/collection/hashes?search%5BsortAscending%5D=true&search%5BsortBy%5D=UNIT_PRICE&search%5BstringTraits%5D%5B0%5D%5Bname%5D=Type&search%5BstringTraits%5D%5B0%5D%5Bvalues%5D%5B0%5D=DAO&ref=dmath.is) (75% discount) Hash holders, respectively.
+
+## Sell
+
+You can navigate to our “sell” page, connect your wallet, and select all the NFTs that you wish to trash (accounting for both ERC-721 and ERC-1155 NFTs).
+
+!['sell' screenshot](/static/images/trashbin/sell.png)
+
+Afterward, you’ll need to sign a message granting the Trash Bin contract access to each collection you wish to trash, approve the ‘trash’ transaction, and then successfully receive 100 WEI for each NFT trashed.
+
+!['buy' screenshot](/static/images/trashbin/buy.png)
+
+## Buy
+
+After you sell a NFT to The JPEG Trash Bin, we’ll hold onto it for 20k blocks (roughly 3 days) to see if the DAO wishes to purchase it. After that holding period, we release it onto our marketplace, found on the homepage.
+
+There you’ll see NFTs organized by collection, showing the amount of items for each in addition to their current market conditions (24 hour volume, 7 day volume, floor price). Selecting a collection will take you to a page where you can browse all NFTs trashed within the collection, check out each NFT’s associated links across additional marketplaces, and of course…select (up to 100 NFTs at a time) and purchase them for a flat rate of 0.02 ETH.
+
+As this project is funded and supported by [hashesDAO](https://thehashes.xyz/), all hashes NFT holders get a discount on marketplace purchases - 75% off for DAO hash holders (IDs 0 - 999) and 25% for standard hash holders (IDs 1000 and up).
+
+The Contact
+The first draft of the JPEG Trash Bin was built using Hardhat, a well-established developer toolset for solidity development. At its core, the smart contract is relatively simple; it's a registry of NFTs that users have sold to the contract, along with a purchase functionality allowing users to remove NFTs from this same registry.
+
+However, the need for the ability to buy or sell multiple NFTs in a single transaction and to accommodate both ERC721 and ERC1155 tokens (which have some diverging properties) led to a good bit of complexity on the contract side.
+
+Audits and Launch
+Upon an internal audit, we reached out to an independent auditing firm ([PopBlocks](https://www.popblocks.org/)), hiring them to audit our JPEG Trash Bin contract.
+
+Following the first audit, the auditor located three severe issues with the code, one logic error, and two economic attack vectors that we hadn't considered. The first audit report may be viewed [here](https://github.com/CookedCookee/TrashBin/blob/main/audits/PopBlocks_Trashbin.sol_Review_rev_1.0.pdf). Additionally, there were a handful of less severe concerns around documentation and upper/lower bounds for variables. After resolving the concerns from the first audit, we reached out for a follow-up audit to ensure contract safety. Thankfully, this follow-up audit didn't reveal any significant issues, so we then confidently deployed to mainnet ([0xf43a8DD18Bf488825caE7E8B5A8693e3423fE4f5](https://etherscan.io/address/0xf43a8DD18Bf488825caE7E8B5A8693e3423fE4f5)).
+
+The second audit report may be viewed [here](https://github.com/CookedCookee/TrashBin/blob/main/audits/Revision_1_-_PopBlocks_Trashbin.sol_Review_.pdf).
+
+## The Front End
+
+Building the Trash Bin UI was fairly straightforward (Next.js, Infura, Ethers.js, Rainbowkit, Chakra-UI) and while we may have caught a few curve balls (contract limitations, building for ERC-1155s, finding [the right NFT api](https://reservoir.tools/)), the end result is something the whole team can be proud of. UI Development took place from December-January, in the midst of contract work and holiday festivities. 🎄
+
+## Final thoughts
+
+From a project management standpoint, The JPEG Trash Bin could have been run much tighter by planning out the specific scope work to be done, time/effort, along with meaningful milestones/phases and their corresponding workstreams between engineers to ensure alignment and deliverables done in sync. The good news is that we’ll take these learnings into our next project, which is coming….SOON.
+
+Overall, we're incredibly proud of what we've produced and learned while building The JPEG Trash Bin. 🤝 🗑
+
+P.S. A big thank you is in order to [CookedCookie](https://twitter.com/0x_cooki/) for his smart contract work and contribution to this blog post. Thank you!!

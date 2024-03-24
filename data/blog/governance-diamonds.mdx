@@ -1,0 +1,91 @@
+---
+title: 'Governance.diamonds'
+date: 2023-02-23T15:32:14Z
+lastmod: '2023-02-23'
+tags: ['next-js', 'tailwind', 'guide']
+draft: false
+summary: 'Discover Ethereum diamond contracts and easily create on-chain proposals for facet state changes.'
+layout: PostSimple
+canonicalUrl: governance-diamonds
+---
+
+[![Watch the video](https://img.youtube.com/vi/Bwokzqdguo0/maxresdefault.jpg)](https://youtu.be/Bwokzqdguo0)
+
+## Intro
+
+I've recently built the first version of [governance.diamonds](https://governance.diamonds/), a new tool for exploring diamond-based contracts, first implemented for [DerivaDex](https://derivadex.com/). This new site allows holders of the Derivadex governance token ([DDX](https://coinmarketcap.com/currencies/derivadao/)) to create on-chain proposals that make changes to its underlying smart contract ecosystem, and also enable more accessible exploration of all DerivaDEX contracts.
+
+At its heart, this tool lives at the intersection of DAOs that use [Compound-style proposals](https://github.com/compound-finance/compound-protocol/blob/master/contracts/Governance/GovernorBravoDelegate.sol) and contracts that use the [EIP-2535](https://eips.ethereum.org/EIPS/eip-2535) diamond standard.
+
+While this tool has been first tailored to Derivadex ‘s needs, any diamond contract can be explored and interacted with using governance.diamonds.
+
+## Proposal Building
+
+Previously, creating proposals had a technical barrier to entry, needing engineers to implement based on the work involved.
+
+Now with this site, token holders can easily explore, share, and create on-chain proposals in a matter of minutes.
+
+On-chain proposals allow you to execute transactions, which can only be run via the DAO address (ex: admin-only operations). These changes can then take place after a vote succeeds (see [governance.derivadex.com](https://governance.derivadex.com/)).
+
+Here's a few examples of specific proposals that can be created through this new UI:
+
+- Send tokens from the DAO-controlled wallet to a contractor for work done
+- Change the minimum amount of DDX needed to make a proposal
+- Change the number of votes needed to reach quorum
+- Pause the exchange (in case of a security issue)
+
+Ultimately, governance.diamonds allows for more ownership and autonomy for the DDX community by lowering the barrier to entry for the creation of on-chain proposals.
+
+## Exploring DerivaDex Contracts
+
+However, this site isn't just a proposal builder; it also exists as an explorer tool that allows you to understand a diamond's underlying facets and interact with their associated functions, for example:
+
+- Queue a proposal upon it passing
+- Execute a queued proposal so its associated changes take place
+- Stake and withdraw DDX to the Insurance Fund
+- Withdraw funds from the DerivaDex exchange
+- The list goes on
+
+These functions above are part of the DerivaDEX system, but not part of governance. This tool also allows non-technical users to call these functions directly.
+
+## OK, but what's with the whole 'diamonds' thing?
+
+A 'diamond' refers to a specific structure or design pattern of a set of smart contracts.
+
+Originally created by [Nick Mudge](https://twitter.com/mudgen), diamond contracts exist as an upgradability pattern, being a more modular way of architecting your smart contracts so that they may be extended after deployment.
+
+A diamond contract exists as a single contract with internal state data that uses external contracts' functions via their addresses. In doing so, this cuts down on the contract size, which has a maximum size limit of 24kb per contract for Ethereum's Virtual Machine.
+
+The diamond contract exists as a proxy to other contracts, known as facets. When an external program calls a function using the diamond contract address, the diamond then uses Solidity's [delegateCall](https://solidity-by-example.org/delegatecall/) function to see if it has an associated facet contract that contains that function. If so - BOOM - it executes it!
+
+Think of the diamond contract as the brains of the operation, as all state variable storage data is stored in the diamond, not its facets.
+
+Diamonds allow an organization pattern where similar data and associated behavior can be encapsulated in the same facet, which can then have similar facets in its file directory, which can then have similar directories in the same parent directory. While initially created to bypass the 24kb contract limit, [EIP-2535](https://eips.ethereum.org/EIPS/eip-2535) diamonds provide something much more useful: a framework for building and organizing smart contract systems that can scale in production.
+
+For further info about diamonds, check out (you guessed it!) [info.diamonds](https://www.info.diamonds/) in addition to Nick Mudge's ongoing [list of EIP-2535 resources](https://github.com/mudgen/awesome-diamonds).
+
+![venn diagram](/static/images/governance/venn-diagram.png)
+
+## Workflow
+
+### Creating An On-Chain Proposal
+
+Imagine you’re a DDX token holder and you believe that the number of votes required to pass an on-chain proposal is way too high. You can input the [DerivaDEX diamond address](https://etherscan.io/address/0x6fb8aa6fc6f27e591423009194529ae126660027), navigate to the ‘Governance’ facet and go to the ‘quorum votes’ section, seeing the current number of votes needed. Upon inputting your change to this vote number + adding it to your new draft, you’re now halfway done with creating your new proposal!
+
+!['add to draft' UI](/static/images/governance/add-to-draft.png)
+
+You can then select the ‘view draft proposal’ button, write an (optional) proposal description, and copy your forthcoming proposal details to your clipboard to share with others. Once you’re ready to create the proposal (and once you have the necessary DDX held/delegated in your connected wallet), select ‘submit proposal’ and approve the following transaction. BOOM! Your proposal is now on-chain and can be voted upon.
+
+!['proposal draft' UI](/static/images/governance/proposal-draft.png)
+
+### Exploring Diamonds
+
+You don’t _have_ to create proposals in this tool; you can input any diamond address that already exists (on Mainnet or Goerli) to get an easy understanding of its underlying facet contracts and their functionalities. Here’s a few common use cases:
+
+- Do a quick check of a current read-only value
+- The UI for a diamond is down and you’d like an easy way to interact with its facets
+- Call functions within facets associated with diamond work still in-progress on Goerli network
+
+## Conclusion
+
+I’m excited to finally have the first version of [governance.diamonds](https://governance.diamonds/) out and generally available for everyone: this tool helps democratize the DAO governance process for DerivaDEX and aids in further adoption of the EIP-2535 diamond standard. In future iterations, we’re considering adding other side-chains (Polygon, Arbitrum, etc) in addition to assisting in the diamond development process by allowing devs to create their own workspaces and submit their own work-in-progress contract ABIs. If you have feedback, please drop us a line via [our Canny instance](https://governance-diamonds.canny.io/feature-requests) and of course, follow us at [@govdotdiamonds](https://twitter.com/govdotdiamonds) for updates!

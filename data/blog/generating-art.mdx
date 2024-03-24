@@ -1,0 +1,71 @@
+---
+title: 'New Work: a community-based generative art editor'
+date: 2023-09-08T15:32:14Z
+lastmod: '2023-09-08'
+tags: ['next-js', 'tailwind', 'guide']
+draft: false
+summary: 'Create generative art without writing a line of code, share project links to friends and collectors.'
+layout: PostSimple
+canonicalUrl: generating-art
+---
+
+## Overview
+
+![editor screenshot one](/static/images/editor/screenshot-1.png)
+
+I recently wrapped up V1 of a new project: [an app](https://editor-alpha-six.vercel.app/collect/new) that **enables people to create generative art without having to write code**. This new experience allows for exploring generative art possibilities within the [Hashes](https://twitter.com/HashesDAO) community and is a solid first step within a larger initiative to create a platform for generative artists and their fans.
+
+In this alpha version, collectors can:
+
+- Explore generative art that results from stacking various [p5.js](https://p5js.org/) scripts (known as "Traits")
+- Save the renderings to update their Hash NFT's metadata
+- Generate and mint a new Hash NFT
+- Save their stack of Traits as a "project" with a link to share it with others
+
+[Take it for a spin](https://editor-alpha-six.vercel.app/collect/new), fork it on [Github](https://github.com/hashesDAO/editor), or keep reading to learn more about how things work under the hood.
+
+![editor screenshot two](/static/images/editor/screenshot-2.png)
+
+## How it Works
+
+Before creating a design, you need a Hash. Hashes are a 256-bit number formatted as a 64 character hex string. Hashes are generated from the combination of a user's connected wallet address, chain network, and a random phrase they submit. Hashes are sourced in-app via Hash NFTs from a user's connected wallet, though users may also generate new hashes on the fly to experiment before minting. As each Hash will be unique, it becomes the "seed" to "generate" new artworks.
+
+The next essential ingredient is a Trait. Traits are [p5.js](https://p5js.org/) scripts that share the same general format, allowing them to be combined. As you combine Traits together, the output of one Trait will become the input for the next one.
+
+To understand the general Trait format, let's check out this example:
+
+```
+function circleTrait(p5, lib, hash) {
+	const size = 10 + lib.leading0s(hash) * 10;
+	return function(inputFn) {
+		return (outputFn) => {
+			inputFn(outputFn);
+			p5.circle(0,0,size);
+		}
+	}
+}
+```
+
+The arguments passed into circleTrait above include `p5`, `lib`, and `hash`:
+
+- p5 - an instance of the p5.js library
+- lib - a local util library which contains functions that convert a hash to various numeric values
+- hash - the hexidecimal hash being passed to this trait
+
+Here, `circleTrait`returns a function which then returns another function. The location of the call-site `inputFn(outputFn)` is above the actual p5j.s drawing call-site. When this trait is composed with others, it will render a circle with a size determined by the hash passed into it.
+
+There are various Traits in our (still unnamed!) app and each fit into one of
+four categories:
+
+- **Drawers** - enable shapes and graphical elements to be drawn on the canvas
+- **Pre-processors** - modify the canvas before drawing (ex: setting background colors)
+- **Repeaters** - repeat a given set of Traits a specified way
+- **Post-processors** - add the final canvas modifications after all other Traits have been added
+
+For a deeper dive into Trait types, see [Jason Hall's](https://twitter.com/hall_jason) (project lead) excellent [series of write-ups](https://github.com/hashesDAO/editor/wiki) on the project, written for both generative artists and collectors.
+
+## Final
+
+As always, you can always hop in the [HashesDAO Discord](https://discord.com/channels/895057713279676427/895391609586323457) to see the latest product updates.
+
+Finally, a huge thank you is in order to [CookedCooki](https://twitter.com/0x_cooki) who helped with V1 direction along with [Binmaker](https://twitter.com/binmaker), and [Jason Hall](https://twitter.com/hall_jason) who were the primary creators of this project and co-authored this piece. Thank you!

@@ -1,0 +1,110 @@
+---
+title: 'Case Study: Rebuilding the Bitly Browser Extension'
+date: 2023-05-19T15:32:14Z
+lastmod: '2023-05-19'
+tags: ['next-js', 'tailwind', 'guide']
+draft: false
+summary: "Re-establishing a product's moat with technical best practices"
+layout: PostSimple
+canonicalUrl: case-studying-the-extension
+---
+
+![screenshots: before and after](/static/images/browser-extension/before-after.png)
+
+## Background
+
+The [Bitly Browser Extension](https://chrome.google.com/webstore/detail/bitly-short-links-and-qr/iabeihobmhlgpkcgjiloemdbofjbdcic) served ~276k weekly active users in Chrome and ~14k in Firefox. Our users ran the gamut from Big Tech™️ social media marketers to long-time users that love collecting/sharing links to friends, and the extension was an active part of their daily workflows.
+
+Under the hood though, there were a few...quirks, you could say. :)
+
+First, the browser extension was **completely coupled** to the [bitly.com](https://bitly.com/) web app at the component layer(!), meaning that the exact same components were used in both contexts. This was maintained by a vast sprinkling of conditionals and switch statements across the frontend to separate contexts.
+
+Additionally, the entire API layer was also coupled to the web app, controlled by a conditional to separate the contexts' different needs for authenticating requests.
+
+Finally, the extension was glued together by a series of custom shell scripts created for developing, QA'ing, and creating build packages to submit each corresponding extension store.
+
+You probably know what all of the above means: as our feature teams shipped work on the web app, the browser extension was continuously broken. Likewise, when customer support tickets came in, it became difficult to even start-up the extension, much less work on it (ex: "to solve one bug, you must first solve ten").
+
+This poor developer experience led to further de-prioritization of the extension, which led to further decay of this product and its potential as a first-class player in our offering.
+
+Now these were all known issues, but in a software co. with thousands of paying users, we had bigger fish to fry, so we left it as-is for other priorities...until it became one. 😱
+
+## Problem
+
+In early February 2021, we received an email from Firefox: the extension was to be removed from their store. Our previously approved package, for some reason, had skipped Mozilla's manual review guidelines.
+
+Firefox's [extension store](https://addons.mozilla.org/en-US/firefox/addon/bitly-shorten/?utm_source=addons.mozilla.org&utm_medium=referral&utm_content=search) is unique in that, If you do anything to generate your production code (ex: use Webpack to create bundles), your code must be reviewed manually (by a Mozilla volunteer) and you must provide source code, a build script, and instructions on how to build an exact replica of the package submitted to the store.
+
+Our extension was so coupled to the web app that we were unable to provide an exact replica of the source code + package for review (despite numerous attempts), and it was removed two months later.
+
+While current users unaffected, our moat was now fully gone in the Firefox store, and this provided a strong org incentive to rebuild the extension to decouple it from the web app.
+
+## Opportunity
+
+Likewise, a rebuild gave us a ton of unique opportunities:
+
+1. Decoupling would fully eliminate the potential for creating extension bugs while working on the web app and would allow us to remove >3k lines of code.
+2. We could deprecate the current method of calling our API in favor of using the generated endpoints from Swagger/Codegen that we were already using, but weren't leveraging to their full potential (ex: endpoint request/response type safety).
+3. We could create an exponentially better, streamlined developer experiences via a modern toolchain for dev/QA/packaging/store submission.
+4. We'd remove various UX and dev anti-patterns via a completely new UX.
+5. We could add real-time error tracking (TrackJS) to catch issues as they arise.
+
+## The Mission
+
+A two week investigation provided a simple path forward, denoting the current architecture and what specifically could be removed in the web app. Likewise, we discovered a fitting toolchain that would fit our extension concerns ([Sample repo here](https://github.com/mathesond2/react-browser-extension-boilerplate)), proposed a simpler architecture, and ultimately planned out exactly what work should be done and how.
+
+This project planning included three areas to ensure cross-org visibility, mitigate risk, and ensure work went smoothly across teammates:
+
+1. Milestones - What are the major markers that will denote our progress? How should that be grouped?
+2. Phases - Within each milestone, what are the blocks of work that need to be done before others can begin?
+3. Workstreams - How may we organize each phase so that there are less hiccups around teammates' work and minimal code conflicts?
+
+Doing this work up front paid dividends later, as it led to a smooth dev team experience along with full transparency on exactly where we were when needed by stakeholders.
+
+#### Current Architecture
+
+![current architecture diagram](/static/images/browser-extension/current-architecture.png)
+
+#### Proposed Architecture
+
+![proposed architecture diagram](/static/images/browser-extension/proposed-architecture.png)
+
+## Tech Stack
+
+From a tech standpoint, we wanted to be a simple as possible. We needed a well-known toolchain with minimal setup, and to leverage as much of what we already had/knew. This was a time-sensitive initiative, and we needed to get back into the Firefox store ASAP.
+
+We chose to use React via [Create React App](https://create-react-app.dev/) + [Craco](https://www.npmjs.com/package/@craco/craco) NPM package for Webpack modifications (for extension concerns). While better options exist now (and [are recommended](https://react.dev/learn/start-a-new-react-project)), CRA was an exponentially better toolchain than our current, homegrown solution. Bitly is a Typescript shop, and we decided to use a host of tools we'd already used:
+
+- [Swagger](https://swagger.io/)/CodeGen for auto-generation (+ further type safety) of our latest API
+- Existing component library
+- Existing auth solution (in the interest of speed)
+- Extension-specific
+  - A Background script to handle various events (log-in, ‘right click + shorten’, etc)
+  - A native pop-up element
+  - [Chrome storage api](https://developer.chrome.com/docs/extensions/reference/storage/) for saving auth details upon login
+
+## Caveats
+
+This rebuild was only one of multiple efforts on our team’s current roadmap, and this led to delay in finishing.
+
+Also, on the outset of this effort there was to be no design resources, preferring to do the rebuild as-is with the current UX. This later changed after significant progress had made and folks in Design saw how a bit of design input could be a UX game-changer. This led to some re-work and a delay in finishing up the initiative.
+
+Finally, we needed to have 1:1 with the current extension to match user expectations before shipping, so thin-slicing the effort from a MVP perspective wasn't possible.
+
+## Ship it
+
+Several months later, we shipped our new extension! A couple issues were detected during the rollout via TrackJS and were immediately fixed. The entire org was stoked to be back in the [Firefox store](https://addons.mozilla.org/en-US/firefox/addon/bitly-shorten/?utm_source=addons.mozilla.org&utm_medium=referral&utm_content=search) and our users were too. While the new UX initially had mixed user reactions, this was expected. Folks in Product were thrilled with the new UX direction, as it matched our new company direction and aesthetic in newer parts of our web app.
+
+## Impact
+
+As a result our initiative, we took an often broken, deprioritized app and make it a first-class player within our product offering.
+
+We were able to remove over 3,000 lines of code in our web app and empowered other feature teams to move faster by not having to tiptoe around extension code.
+
+We went from no tracking in the extension (only learning about issues via bad Google reviews) to nearly immediate error tracking to make sure our product stays top-notch.
+
+In building an app that encouraged maintainability via simplicity and modernity ([It was updated again](https://chrome.google.com/webstore/detail/bitly-short-links-and-qr/iabeihobmhlgpkcgjiloemdbofjbdcic) less a month ago!), we were also featured by Chrome as an example of extension best practices.
+
+Ultimately, we cemented ourselves in the org as a new feature team that does solid work, and it was great to see my teammates grow in their skills and team relationships.🤝
+
+![current architecture diagram](/static/images/browser-extension/final.png)
