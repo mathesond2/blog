@@ -1,4 +1,5 @@
-![tailwind-nextjs-banner](/public/static/images/twitter-card.png)
+# 👋🏄‍♂️
+Personal blog (many thanks to [bpiggin](https://github.com/bpiggin) for the clean template and layout 🙏).
 
 ## Quick Start Guide
 
