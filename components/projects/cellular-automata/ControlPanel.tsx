@@ -28,7 +28,7 @@ export const ControlPanel: FC<IProps> = ({ rule, setRule }) => {
           type="number"
           min="1"
           max="256"
-          className="ml-2 -mt-0.5 h-7"
+          className="-mt-0.5 ml-2 h-7"
           value={value}
           onChange={(e) => e.target.value.length < 4 && setValue(e.target.value)}
         />

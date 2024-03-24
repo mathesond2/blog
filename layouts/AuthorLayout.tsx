@@ -26,7 +26,7 @@ export default function AuthorLayout({ frontMatter }: Props) {
               className="h-48 w-48 rounded-full"
             />
           </div>
-          <div className="prose max-w-none pt-8 pb-8 dark:prose-dark xl:col-span-2">
+          <div className="prose max-w-none pb-8 pt-8 dark:prose-dark xl:col-span-2">
             Hey, I'm Ben. 👋
             <br />
             <br />
